@@ -1,0 +1,18 @@
+{
+  "contract": {
+    "name": "PudgyPenguins",
+    "symbol": "PPG",
+    "totalSupply": "1",
+    "maxSupply": "8888",
+    "baseURI": "ipfs://bafybeifj3j2mddvvehn2mc7u7p76rgxg4rxykhnzq4a6dgmbzyqzzf5zva/",
+    "owner": "0xb644aa444FE997Ad7ad66429DF70Cada3406BCf1",
+    "paused": false
+  },
+  "tokens": [
+    {
+      "tokenId": 0,
+      "owner": "0xb644aa444FE997Ad7ad66429DF70Cada3406BCf1",
+      "tokenURI": "ipfs://bafybeifj3j2mddvvehn2mc7u7p76rgxg4rxykhnzq4a6dgmbzyqzzf5zva/0"
+    }
+  ]
+}
