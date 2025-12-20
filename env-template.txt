@@ -1,23 +1,23 @@
-# 私钥配置（不要提交到Git！）
+# Private Key Configuration (NEVER commit real keys!)
 PRIVATE_KEY=your_private_key_here
 
-# RPC节点配置（可选，有默认值）
+# RPC Node Configuration (optional, has defaults)
 SEPOLIA_RPC_URL=https://rpc.sepolia.org
-GOERLI_RPC_URL=https://rpc.ankr.com/eth_goerli
-MUMBAI_RPC_URL=https://rpc-mumbai.maticvigil.com
-BSC_TESTNET_RPC_URL=https://data-seed-prebsc-1-s1.binance.org:8545
-ARB_TESTNET_RPC_URL=https://goerli-rollup.arbitrum.io/rpc
-OP_TESTNET_RPC_URL=https://goerli.optimism.io
+AMOY_RPC_URL=https://rpc-amoy.polygon.technology
+BSCTESTNET_RPC_URL=https://data-seed-prebsc-1-s1.binance.org:8545
+BASESEPOLIA_RPC_URL=https://sepolia.base.org
 
-# 区块浏览器API密钥（用于验证合约）
+# Block Explorer API Keys (for contract verification)
 ETHERSCAN_API_KEY=your_etherscan_api_key
 POLYGONSCAN_API_KEY=your_polygonscan_api_key
 BSCSCAN_API_KEY=your_bscscan_api_key
-ARBISCAN_API_KEY=your_arbiscan_api_key
-OPTIMISTIC_ETHERSCAN_API_KEY=your_optimistic_etherscan_api_key
+BASESCAN_API_KEY=your_basescan_api_key
 
-# 部署配置
-BASE_URI=https://your-metadata-uri.com/
-CONTRACT_NAME=PudgyPenguins
-CONTRACT_SYMBOL=PPG
+# IPFS Configuration (Pinata)
+PINATA_JWT=your_pinata_jwt_here
+# IPFS Gateway (Pinata)
+NEXT_PUBLIC_GATEWAY_URL=your_gateway_here
+# Legacy Pinata API keys (optional, JWT preferred)
+PINATA_API_KEY=your_pinata_api_key
+PINATA_SECRET_KEY=your_pinata_secret_key
 

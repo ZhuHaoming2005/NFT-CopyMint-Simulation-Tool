@@ -1,53 +1,53 @@
 {
-  "name": "nft-conflict-research",
+  "name": "nft-copymint-research",
   "version": "1.0.0",
-  "description": "NFT Copymints研究项目 - 支持多测试网部署和测试",
-  "main": "index.js",
+  "description": "NFT CopyMint Research Project - Support multi-network deployment and three-level CopyMint functionality",
+  "main": "dist/index.js",
   "scripts": {
+    "build": "tsc",
     "compile": "hardhat compile",
-    "deploy:sepolia": "hardhat run scripts/deploy.js --network sepolia",
-    "deploy:amoy": "hardhat run scripts/deploy.js --network amoy",
-    "deploy:base-sepolia": "hardhat run scripts/deploy.js --network BaseSepolia",
-    "deploy:bsctestnet": "hardhat run scripts/deploy.js --network BSCTestnet",
     "test": "hardhat test",
-    "test:mint": "hardhat run scripts/testMint.js",
-    "test:mint:sepolia": "hardhat run scripts/testMint.js --network sepolia",
-    "test:mint:amoy": "hardhat run scripts/testMint.js --network amoy",
-    "test:mint:base-sepolia": "hardhat run scripts/testMint.js --network BaseSepolia",
-    "test:mint:bsctestnet": "hardhat run scripts/testMint.js --network BSCTestnet",
-    "query:sepolia": "hardhat run scripts/queryNFT.js --network sepolia",
-    "query:amoy": "hardhat run scripts/queryNFT.js --network amoy",
-    "query:base-sepolia": "hardhat run scripts/queryNFT.js --network BaseSepolia",
-    "query:bsctestnet": "hardhat run scripts/queryNFT.js --network BSCTestnet",
-    "set-uri:sepolia": "hardhat run scripts/setTokenURI.js --network sepolia",
-    "set-uri:amoy": "hardhat run scripts/setTokenURI.js --network amoy",
-    "set-uri:base-sepolia": "hardhat run scripts/setTokenURI.js --network BaseSepolia",
-    "set-uri:bsctestnet": "hardhat run scripts/setTokenURI.js --network BSCTestnet",
-    "compare": "node scripts/compareCopymints.js",
+    "copymint": "ts-node scripts/copyMint.ts",
+    "copymint:sepolia": "ts-node scripts/copyMint.ts --source-chain sepolia --target-chain sepolia",
+    "copymint:mainnet": "ts-node scripts/copyMint.ts --source-chain mainnet --target-chain mainnet",
+    "compare": "ts-node scripts/compareCopymints.ts",
     "node": "hardhat node",
     "verify:sepolia": "hardhat verify --network sepolia",
     "verify:amoy": "hardhat verify --network amoy",
     "verify:base-sepolia": "hardhat verify --network BaseSepolia",
-    "verify:bsctestnet": "hardhat verify --network BSCTestnet"
+    "verify:bsctestnet": "hardhat verify --network BSCTestnet",
+    "verify:mainnet": "hardhat verify --network mainnet",
+    "verify:polygon": "hardhat verify --network polygon",
+    "verify:base": "hardhat verify --network base",
+    "verify:bsc": "hardhat verify --network bsc"
   },
   "keywords": [
     "NFT",
     "copymints",
     "ERC721",
     "hardhat",
-    "solidity"
+    "solidity",
+    "typescript",
+    "ipfs"
   ],
-  "author": "",
+  "author": "Haoming Zhu",
   "license": "MIT",
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@nomicfoundation/hardhat-ethers": "^3.1.3",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "@nomicfoundation/hardhat-verify": "^2.1.3",
-    "@openzeppelin/contracts": "^4.9.0",
-    "dotenv": "^16.3.1",
-    "hardhat": "^2.19.0"
+    "@openzeppelin/contracts": "^5.4.0",
+    "@types/node": "^25.0.3",
+    "dotenv": "^17.2.3",
+    "hardhat": "^2.28.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@openzeppelin/hardhat-upgrades": "^3.0.0",
-    "ethers": "^6.9.0"
+    "@openzeppelin/hardhat-upgrades": "^3.9.1",
+    "axios": "^1.13.2",
+    "ethers": "^6.16.0",
+    "form-data": "^4.0.5",
+    "pinata": "^2.5.1"
   }
 }
