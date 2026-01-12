@@ -100,6 +100,7 @@ export class IPFSService {
       // Handle IPFS URIs
       let url = tokenURI;
       if (url.startsWith('ipfs://')) {
+        url = url.replace('ipfs/', '');
         url = url.replace('ipfs://', 'https://gateway.pinata.cloud/ipfs/');
       }
 
