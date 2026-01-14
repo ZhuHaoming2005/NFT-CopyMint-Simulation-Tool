@@ -36,6 +36,7 @@ npm run copymint -- <sourceContract> [options]
 - `--source-chain <chain>` - Source blockchain network (default: sepolia)
 - `--target-chain <chain>` - Target blockchain network (default: sepolia)
 - `--max-copy-count <n>` - Maximum tokens to copy for Level 2/3 (default: all, for debugging)
+  - This parameter limits the number of tokens to process during metadata/image re-upload operations, useful for testing and reducing IPFS upload costs during development.
 - `--mint-count <n>` - Number of tokens to mint after deployment (default: 1)
 - `--max-per-mint <n>` - Maximum tokens per mint transaction (default: 20)
 - `--skip-verify` - Skip contract verification on block explorer
