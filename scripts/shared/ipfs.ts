@@ -1,22 +1,6 @@
 import axios from 'axios';
 import { PinataSDK } from 'pinata';
-
-export interface NFTMetadata {
-  name?: string;
-  description?: string;
-  image?: string;
-  attributes?: Array<{
-    trait_type: string;
-    value: string | number;
-  }>;
-  [key: string]: any;
-}
-
-export enum CopyMintLevel {
-  LEVEL_1 = 1, // Direct baseURI copy
-  LEVEL_2 = 2, // Re-upload metadata JSON to IPFS
-  LEVEL_3 = 3  // Re-upload images and modify metadata
-}
+import { NFTMetadata, CopyMintLevel } from './types';
 
 export class IPFSService {
   private pinata: PinataSDK;
@@ -219,30 +203,35 @@ export class IPFSService {
         metadataCache.set(tokenId, originalMetadata);
 
         // Download and prepare image if it exists
-        if (originalMetadata.image) {
-          let imageUrl = originalMetadata.image;
-          if (imageUrl.startsWith('ipfs://')) {
-            imageUrl = imageUrl.replace('ipfs://', 'https://gateway.pinata.cloud/ipfs/');
-          }
+        let imageUrl: string;
+        if (originalMetadata.image)
+          imageUrl = originalMetadata.image;
+        else if(originalMetadata.uri)
+          imageUrl = originalMetadata.uri;
+        else if(originalMetadata.data && originalMetadata.data.url)
+          imageUrl = originalMetadata.data.url;
+        else
+          throw new Error(`No image URL found for token ${tokenId}`);
 
-          // Download image
-          const imageBuffer = await this.downloadFile(imageUrl);
-
-          // Create image File object
-          const fileExtension = this.getImageExtension(originalMetadata.image);
-          const imageFilename = `${tokenId}${fileExtension}`;
-          const uint8Array = new Uint8Array(imageBuffer);
-          const blob = new Blob([uint8Array], { type: 'application/octet-stream' });
-          const imageFile = new File([blob], imageFilename);
-          imageFiles.push(imageFile);
-
-          // Store the mapping for metadata update
-          imageFilenames.set(tokenId, imageFilename);
-
-          console.log(`Downloaded metadata and image for token ${tokenId}`);
-        } else {
-          console.log(`Downloaded metadata for token ${tokenId} (no image)`);
+        if (imageUrl && imageUrl.startsWith('ipfs://')) {
+          imageUrl = imageUrl.replace('ipfs://', 'https://gateway.pinata.cloud/ipfs/');
         }
+
+        // Download image
+        const imageBuffer = await this.downloadFile(imageUrl);
+
+        // Create image File object
+        const fileExtension = this.getImageExtension(imageUrl);
+        const imageFilename = `${tokenId}${fileExtension}`;
+        const uint8Array = new Uint8Array(imageBuffer);
+        const blob = new Blob([uint8Array], { type: 'application/octet-stream' });
+        const imageFile = new File([blob], imageFilename);
+        imageFiles.push(imageFile);
+
+        // Store the mapping for metadata update
+        imageFilenames.set(tokenId, imageFilename);
+
+        console.log(`Downloaded metadata and image for token ${tokenId}`);
       } catch (error) {
         console.error(`Failed to download data for token ${tokenId}:`, error);
         // Continue with other tokens
@@ -353,4 +342,3 @@ export class IPFSService {
     }
   }
 }
-
