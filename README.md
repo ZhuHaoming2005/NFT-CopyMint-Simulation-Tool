@@ -8,10 +8,18 @@ A tool to copy and deploy existing NFT collections to the same or different bloc
 
 ## Commands
 
-### Compile Contract
+### Compile Contracts
 
+**EVM (Hardhat):**
 ```bash
 npm run compile
+```
+
+**Solana (Anchor):**
+```bash
+npm run compile:solana
+# or
+anchor build
 ```
 
 ### CopyMint (Copy NFT Collection)

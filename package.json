@@ -6,10 +6,13 @@
   "scripts": {
     "build": "tsc",
     "compile": "hardhat compile",
+    "compile:solana": "anchor build",
     "test": "hardhat test",
+    "test:solana": "anchor test",
     "copymint": "ts-node scripts/copyMint.ts",
     "copymint:sepolia": "ts-node scripts/copyMint.ts --source-chain sepolia --target-chain sepolia",
     "copymint:mainnet": "ts-node scripts/copyMint.ts --source-chain mainnet --target-chain mainnet",
+    "copymint:solana": "ts-node scripts/copyMint.ts --target-chain solana-devnet",
     "node": "hardhat ts-node",
     "verify": "hardhat verify",
     "verify:sepolia": "hardhat verify --network sepolia",
@@ -27,8 +30,12 @@
     "ERC721",
     "hardhat",
     "solidity",
+    "solana",
+    "anchor",
+    "metaplex",
     "typescript",
-    "ipfs"
+    "ipfs",
+    "cross-chain"
   ],
   "author": "Haoming Zhu",
   "license": "MIT",
@@ -44,8 +51,13 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@coral-xyz/anchor": "^0.32.1",
+    "@metaplex-foundation/mpl-token-metadata": "^3.4.0",
     "@openzeppelin/hardhat-upgrades": "^3.9.1",
+    "@solana/spl-token": "^0.4.14",
+    "@solana/web3.js": "^1.98.4",
     "axios": "^1.13.2",
+    "bs58": "^6.0.0",
     "ethers": "^6.16.0",
     "form-data": "^4.0.5",
     "pinata": "^2.5.1"
