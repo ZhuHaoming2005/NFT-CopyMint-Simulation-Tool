@@ -4,7 +4,7 @@ A tool to copy and deploy existing NFT collections to the same or different bloc
 
 **WARNING**: This is for research purposes only. CopyMint attacks are unethical and potentially illegal.
 
-**Note**: To use new package, You'd better use new version of Node.js, such as v24.12.0 .
+**Note**: To use new package, You'd better use new version of Node.js, such as v24.12.0 . We recommend you to run on Linux.
 
 ## Commands
 
@@ -43,8 +43,12 @@ npm run copymint -- <sourceContract> [options]
 
 ### Available Networks
 
+#### EVM Networks
 - **Testnets**: sepolia, amoy, baseSepolia, bscTestnet
 - **Mainnets**: mainnet, polygon, base, bsc
+
+#### Solana Networks 
+- **Networks**: solana-devnet, solana-testnet, solana
 
 ## Examples
 
