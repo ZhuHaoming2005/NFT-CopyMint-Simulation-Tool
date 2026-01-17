@@ -290,7 +290,7 @@ export class SolanaCopyMintOrchestrator implements ICopyMintOrchestrator {
         baseURI: sourceInfo.baseURI
       },
       target: {
-        collectionAddress: this.contractAddress,
+        collectionAddress: Object.fromEntries(this.contractAddress),
         network: config.targetChain,
         cluster: cluster,
         name: sourceInfo.name,
