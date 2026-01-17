@@ -135,7 +135,11 @@ export class IPFSService {
           : `${originalBaseURI}/${tokenId}`;
 
         // Download original metadata
-        const metadata = await this.downloadMetadata(originalTokenURI);
+        let metadata: NFTMetadata = await this.downloadMetadata(originalTokenURI);
+
+        if(metadata.image) {
+          metadata.image = metadata.image.replace('ipfs://', 'https://ipfs.io/ipfs/');
+        }
 
         // Convert metadata to File object with tokenId as filename
         const metadataString = JSON.stringify(metadata, null, 2);
@@ -159,7 +163,7 @@ export class IPFSService {
     const upload = await this.pinata.upload.public.fileArray(files);
     const folderCID = upload.cid;
 
-    console.log(`✓ Folder uploaded with CID: ${folderCID}`);
+    console.log(`Folder uploaded with CID: ${folderCID}`);
     const newBaseURI = `ipfs://${folderCID}/`;
     return newBaseURI;
   }
@@ -271,7 +275,7 @@ export class IPFSService {
         if (imageFilenames.has(tokenId) && imagesFolderCID) {
           // Use full IPFS path with images folder CID
           const imageFilename = imageFilenames.get(tokenId)!;
-          newMetadata.image = `ipfs://${imagesFolderCID}/${imageFilename}`;
+          newMetadata.image = `https://ipfs.io/ipfs/${imagesFolderCID}/${imageFilename}`;
         }
 
         // Create metadata File object

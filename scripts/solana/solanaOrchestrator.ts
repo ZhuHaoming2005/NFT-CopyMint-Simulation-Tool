@@ -208,8 +208,13 @@ export class SolanaCopyMintOrchestrator implements ICopyMintOrchestrator {
         const nftMint = generateSigner(umi);
 
         // Generate token URI: baseURI + tokenId
-        const tokenUri = `${this.baseURI}${tokenId}`;
+        let tokenUri = `${this.baseURI}${tokenId}`;
         const tokenName = `${this.collectionName} #${tokenId}`;
+
+        if (tokenUri.startsWith('ipfs://')) {
+          tokenUri = tokenUri.replace('ipfs/', '');
+          tokenUri = tokenUri.replace('ipfs://', 'https://ipfs.io/ipfs/');
+        }
 
         console.log(`[${i + 1}/${count}] Minting NFT #${tokenId}...`);
 
@@ -219,7 +224,7 @@ export class SolanaCopyMintOrchestrator implements ICopyMintOrchestrator {
           name: tokenName,
           symbol: this.symbol,
           uri: tokenUri,
-          sellerFeeBasisPoints: percentAmount(0),
+          sellerFeeBasisPoints: percentAmount(100),
         }).sendAndConfirm(umi);
 
         this.contractAddress.set(tokenName, nftMint.publicKey.toString());
