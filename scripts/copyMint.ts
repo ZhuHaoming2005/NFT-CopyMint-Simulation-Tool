@@ -7,6 +7,7 @@
 
 import { CopyMintLevel, BaseCopyMintConfig, CopyMintResult, ICopyMintOrchestrator } from './shared/types';
 import { EVMCopyMintOrchestrator } from './evm/evmOrchestrator';
+import { SolanaCopyMintOrchestrator } from './solana/solanaOrchestrator';
 
 /**
  * Determine blockchain ecosystem based on network name
@@ -205,7 +206,7 @@ async function main() {
     if (sourceEcosystem === 'evm') {
       sourceOrchestrator = new EVMCopyMintOrchestrator();
     } else if (sourceEcosystem === 'solana') {
-      throw new Error(`Unsupported source ecosystem: ${sourceEcosystem}`);
+      sourceOrchestrator = new SolanaCopyMintOrchestrator();
     } else {
       throw new Error(`Unsupported source ecosystem: ${sourceEcosystem}`);
     }
@@ -214,7 +215,7 @@ async function main() {
     if (targetEcosystem === 'evm') {
       targetOrchestrator = new EVMCopyMintOrchestrator();
     } else if (targetEcosystem === 'solana') {
-      throw new Error(`Unsupported source ecosystem: ${sourceEcosystem}`);
+      targetOrchestrator = new SolanaCopyMintOrchestrator();
     } else {
       throw new Error(`Unsupported target ecosystem: ${targetEcosystem}`);
     }
