@@ -5,8 +5,6 @@
 
 import { 
   createNft,
-  verifyCollectionV1,
-  findMetadataPda,
   mplTokenMetadata 
 } from "@metaplex-foundation/mpl-token-metadata";
 import {
@@ -29,14 +27,15 @@ const path = require("path");
 export class SolanaCopyMintOrchestrator implements ICopyMintOrchestrator {
   private ipfsService: IPFSService;
   private umi: any = null;
-  private collectionMint: any = null;
   private mintedCount: number = 0;
   private baseURI: string = '';
   private collectionName: string = '';
+  private contractAddress: Map<string,string>;
   private symbol: string = '';
 
   constructor() {
     this.ipfsService = new IPFSService();
+    this.contractAddress = new Map<string,string>()
   }
 
   /**
@@ -153,68 +152,29 @@ export class SolanaCopyMintOrchestrator implements ICopyMintOrchestrator {
   }
 
   /**
-   * Deploy "contract" = Create Collection NFT
-   * On Solana, we create a Collection NFT that acts as the parent for all minted NFTs
+   * Skip Deploying Contract on Solana
    */
   async deployCopyMintContract(
     name: string,
     symbol: string,
     baseURI: string,
-    maxElements: number,
+    _maxElements: number,
     _maxPerMint: number,
     networkName: string
   ): Promise<string> {
-    console.log(`\n========== Creating Solana NFT Collection ==========`);
-    console.log(`Network: ${networkName}`);
-    console.log(`Name: ${name}`);
-    console.log(`Symbol: ${symbol}`);
-    console.log(`Max Supply: ${maxElements}`);
-    console.log(`Base URI: ${baseURI}`);
-    console.log(`====================================================\n`);
+    console.log('\n========== Solana NFT Deploy ===============');
+    console.log(`Skip Deploying Contract on Solana`);
+    console.log(`============================================\n`);
 
-    const umi = await this.initializeUmi(networkName);
+    await this.initializeUmi(networkName);
 
-    try {
-      // Generate signer for the Collection NFT
-      this.collectionMint = generateSigner(umi);
+    // Store collection info for minting
+    this.baseURI = baseURI;
+    this.collectionName = name;
+    this.symbol = symbol;
+    this.mintedCount = 0;
 
-      console.log('Creating Collection NFT...');
-
-      // Create the Collection NFT
-      await createNft(umi, {
-        mint: this.collectionMint,
-        name: name,
-        symbol: symbol,
-        uri: baseURI,
-        sellerFeeBasisPoints: percentAmount(0),
-        isCollection: true,
-      }).sendAndConfirm(umi);
-
-      const collectionAddress = this.collectionMint.publicKey;
-      
-      // Wait and verify collection metadata exists on-chain
-      console.log('Waiting for collection to be confirmed...');
-      await new Promise(resolve => setTimeout(resolve, 3000));
-
-      const cluster = this.getClusterName(networkName);
-
-      console.log(`\nCollection created successfully!`);
-      console.log(`Collection Address: ${collectionAddress}`);
-      console.log(`Explorer: https://explorer.solana.com/address/${collectionAddress}?cluster=${cluster}`);
-      console.log(`Metaplex: https://core.metaplex.com/explorer/${collectionAddress}?cluster=${cluster}`);
-
-      // Store collection info for minting
-      this.baseURI = baseURI;
-      this.collectionName = name;
-      this.symbol = symbol;
-      this.mintedCount = 0;
-
-      // Return collection address as "contract address"
-      return collectionAddress.toString();
-    } catch (error: any) {
-      console.error('\nFailed to create collection:', error.message);
-      throw new Error(`Failed to create Solana collection: ${error.message}`);
-    }
+    return '';
   }
 
   /**
@@ -229,10 +189,6 @@ export class SolanaCopyMintOrchestrator implements ICopyMintOrchestrator {
     }
 
     const umi = this.umi;
-
-    if (!this.collectionMint) {
-      throw new Error('Collection not initialized. Call deployCopyMintContract first.');
-    }
 
     if (!this.baseURI) {
       throw new Error('Base URI not set. Call deployCopyMintContract first.');
@@ -257,42 +213,19 @@ export class SolanaCopyMintOrchestrator implements ICopyMintOrchestrator {
 
         console.log(`[${i + 1}/${count}] Minting NFT #${tokenId}...`);
 
-        // Step 1: Create the NFT and link it to the collection
+        // Create the NFT and link it to the collection
         await createNft(umi, {
           mint: nftMint,
           name: tokenName,
           symbol: this.symbol,
           uri: tokenUri,
           sellerFeeBasisPoints: percentAmount(0),
-          collection: {
-            key: this.collectionMint.publicKey,
-            verified: false,
-          },
         }).sendAndConfirm(umi);
+
+        this.contractAddress.set(tokenName, nftMint.publicKey.toString());
 
         console.log(`NFT created: ${nftMint.publicKey}`);
 
-        // Wait for NFT metadata to be confirmed on-chain
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
-        // Step 2: Verify the NFT as official collection member
-        try {
-          const metadata = findMetadataPda(umi, { 
-            mint: nftMint.publicKey 
-          })[0];
-          
-          await verifyCollectionV1(umi, {
-            metadata: metadata,
-            collectionMint: this.collectionMint,
-          }).sendAndConfirm(umi);
-
-          console.log(`Collection verified`);
-        } catch (verifyError: any) {
-          const errorMsg = verifyError.message?.split('\n')[0] || verifyError.toString();
-          console.warn(`  Verification failed: ${errorMsg}`);
-        }
-
-        console.log(`  Success! Mint: ${nftMint.publicKey}`);
         successCount++;
         this.mintedCount++;
       } catch (error: any) {
@@ -313,22 +246,17 @@ export class SolanaCopyMintOrchestrator implements ICopyMintOrchestrator {
    * Verify "contract" - On Solana, verification is automatic (on-chain data)
    */
   async verifyContract(
-    contractAddress: string,
+    _contractAddress: string,
     _name: string,
     _symbol: string,
     _baseURI: string,
     _maxElements: number,
     _maxPerMint: number,
-    networkName: string
+    _networkName: string
   ): Promise<void> {
-    const cluster = this.getClusterName(networkName);
     
     console.log('\n========== Solana NFT Verification ==========');
     console.log('Solana NFTs are automatically verifiable on-chain');
-    console.log(`Collection Address: ${contractAddress}`);
-    console.log(`Network: ${networkName} (${cluster})`);
-    console.log(`Explorer: https://explorer.solana.com/address/${contractAddress}?cluster=${cluster}`);
-    console.log(`Metaplex: https://core.metaplex.com/explorer/${contractAddress}?cluster=${cluster}`);
     console.log(`============================================\n`);
   }
 
@@ -338,7 +266,7 @@ export class SolanaCopyMintOrchestrator implements ICopyMintOrchestrator {
   recordDeploymentInfo(
     config: BaseCopyMintConfig,
     sourceInfo: SourceNFTInfo,
-    contractAddress: string,
+    _contractAddress: string,
     newBaseURI: string,
     networkName: string
   ): void {
@@ -352,7 +280,7 @@ export class SolanaCopyMintOrchestrator implements ICopyMintOrchestrator {
       network: networkName,
       cluster: cluster,
       ecosystem: 'Solana',
-      type: 'Metaplex NFT Collection',
+      type: 'Metaplex NFT',
       source: {
         contract: config.sourceContract,
         network: config.sourceChain,
@@ -362,7 +290,7 @@ export class SolanaCopyMintOrchestrator implements ICopyMintOrchestrator {
         baseURI: sourceInfo.baseURI
       },
       target: {
-        collectionAddress: contractAddress,
+        collectionAddress: this.contractAddress,
         network: config.targetChain,
         cluster: cluster,
         name: sourceInfo.name,
@@ -375,13 +303,6 @@ export class SolanaCopyMintOrchestrator implements ICopyMintOrchestrator {
         level: config.level,
         maxCopyCount: config.maxCopyCount || 'all',
         verificationSkipped: config.skipVerify || false
-      },
-      explorer: {
-        solanaExplorer: `https://explorer.solana.com/address/${contractAddress}?cluster=${cluster}`,
-        metaplexExplorer: `https://core.metaplex.com/explorer/${contractAddress}?cluster=${cluster}`,
-        solscan: cluster === 'mainnet-beta' 
-          ? `https://solscan.io/address/${contractAddress}` 
-          : `https://solscan.io/address/${contractAddress}?cluster=${cluster}`
       }
     };
 
