@@ -4,7 +4,22 @@ A tool to copy and deploy existing NFT collections to the same or different bloc
 
 **WARNING**: This is for research purposes only. CopyMint attacks are unethical and potentially illegal.
 
-**Note**: To use new package, You'd better use new version of Node.js, such as v24.12.0 . We recommend you to run on Linux.
+## Install
+
+- Operating System: Ubuntu 24.04
+- Node.js: v24.13.0
+
+```bash
+npm install
+```
+
+## Environment
+
+Copy environment files. Then fill in the environment variables.
+
+```bash
+cp .env.template .env
+```
 
 ## Commands
 
@@ -20,13 +35,14 @@ npm run compile
 npm run copymint -- <sourceContract> [options]
 ```
 
-## Parameters
+<details>
+<summary><span style="font-weight: bold;">Command Line Arguments</span></summary>
 
-### Required
+#### Required
 
 - `<sourceContract>` - Source NFT contract address
 
-### Optional
+#### Optional
 
 - `--level <1|2|3>` - CopyMint level (default: 1)
   - Level 1: Direct baseURI copy
@@ -35,11 +51,14 @@ npm run copymint -- <sourceContract> [options]
 
 - `--source-chain <chain>` - Source blockchain network (default: sepolia)
 - `--target-chain <chain>` - Target blockchain network (default: sepolia)
-- `--max-copy-count <n>` - Maximum tokens to copy for Level 2/3 (default: all, for debugging)
+- `--max-copy-count <n>` - Maximum tokens to copy for Level 2/3 (default: all)
   - This parameter limits the number of tokens to process during metadata/image re-upload operations, useful for testing and reducing IPFS upload costs during development.
 - `--mint-count <n>` - Number of tokens to mint after deployment (default: 1)
 - `--max-per-mint <n>` - Maximum tokens per mint transaction (default: 20)
 - `--skip-verify` - Skip contract verification on block explorer
+
+</details>
+<br>
 
 ### Available Networks
 
