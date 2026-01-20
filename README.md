@@ -4,6 +4,10 @@ A tool to copy and deploy existing NFT collections to the same or different bloc
 
 **WARNING**: This is for research purposes only. CopyMint attacks are unethical and potentially illegal.
 
+## Demo
+
+
+
 ## Install
 
 - Operating System: Ubuntu 24.04
