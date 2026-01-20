@@ -8,6 +8,10 @@ A tool to copy and deploy existing NFT collections to the same or different bloc
 
 
 
+https://github.com/user-attachments/assets/db068876-ba20-4d9c-b8d2-f3cd4290552b
+
+
+
 ## Install
 
 - Operating System: Ubuntu 24.04
