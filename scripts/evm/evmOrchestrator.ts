@@ -242,6 +242,10 @@ export class EVMCopyMintOrchestrator implements ICopyMintOrchestrator {
     console.log(`Contract Address: ${contractAddress}`);
 
     try {
+      // Wait a bit for the contract to be indexed by the block explorer
+      console.log('Waiting 30 seconds for block explorer indexing...');
+      await new Promise(resolve => setTimeout(resolve, 30000));
+
       console.log('Starting verification...');
 
       // Use execSync for simpler command execution
