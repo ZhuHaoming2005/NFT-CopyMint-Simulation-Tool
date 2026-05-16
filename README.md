@@ -1,4 +1,4 @@
-# CopyMint NFT
+# NFT CopyMint Simulation Tool
 
 A tool to copy and deploy existing NFT collections to the same or different blockchain networks, with three levels of copying: direct baseURI reuse, metadata re-upload, or full image and metadata re-upload to IPFS.
 
